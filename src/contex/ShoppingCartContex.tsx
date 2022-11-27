@@ -1,4 +1,5 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { ProductService } from "../services/ProductService";
 
 type ShoppingCartProviderProps = {
     children: ReactNode;
@@ -48,8 +49,9 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps ) {
     const openCart = () => setIsOpen(true);
     const closeCart = () => setIsOpen(false);
 
-    function getProducts(){
-        
+    async function getProducts(){
+        const result = await ProductService.getAll();
+        setProducts(result.data);
     }
 
     function createProduct(name: string, description: string, stock: number, price: number, mageUrl: string, ategory_id: number) {
@@ -71,6 +73,10 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps ) {
     function deleteCart(user_id: number) {
 
     }
+    useEffect(() => {
+        getProducts();
+      }, []);
+ 
 
     return (
         <ShoppingCartContext.Provider

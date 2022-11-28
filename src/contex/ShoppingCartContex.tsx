@@ -18,8 +18,8 @@ type ShoppingCartContext = {
     closeCart: () => void;
     getProducts: () => void;
     createProduct: (name: string, description: string, stock: number, price: number, mageUrl: string, ategory_id: number) => void
-    getCartItems: (user_id: number) => void;
-    addCartItem: (product_id: number, quantity: number, user_id: number) => void;
+    getCartItems: () => void;
+    addCartItem: (product_id: number, quantity: number) => void;
     removeCartItem: (product_id: number) => void;
     deleteCart: (user_id: number) => void;
     placeOrder: () => void;
@@ -50,21 +50,23 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps ) {
 
     }
 
-    async function getCartItems(user_id: number) {
-        const result = await CartService.getAll(user_id);
+    async function getCartItems() {
+        const result = await CartService.getAll();
         console.log(result.data)
         setCartItems(result.data.cartItems);
         setTotalCost(result.data.totalCost);
     }
 
-    async function addCartItem(product_id: number, quantity: number, user_id: number) {
-        console.log("product_id"+ product_id + "quantity" + quantity+ "user_id"+ user_id);
-        const result = await CartService.addCartItem({product_id, quantity, user_id});
+    async function addCartItem(product_id: number, quantity: number) {
+        console.log("product_id"+ product_id + "quantity" + quantity);
+        const result = await CartService.addCartItem({product_id, quantity});
         setRender(result.data);
     }
 
-    function removeCartItem(product_id: number) {
-
+    async function removeCartItem(product_id: number) {
+        const result = await CartService.deleteCartItem(product_id);
+        console.log(result.data);
+        getCartItems();
     }
 
     function deleteCart(user_id: number) {
@@ -82,7 +84,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps ) {
     
     useEffect(() => {
         getProducts();
-        getCartItems(1);
+        getCartItems();
     }, [render]);
     
     return (

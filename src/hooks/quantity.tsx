@@ -3,9 +3,9 @@ import { useState } from 'react'
 import { useShoppingCart } from '../contex/ShoppingCartContex';
 import useDebounce from './debounce';
 
-function useQuantity() {
+function useQuantity(pro:number = 0) {
     const { addCartItem} = useShoppingCart();
-    const [quantity, setQuantity] = useState(0);
+    const [quantity, setQuantity] = useState(pro);
     const [selectedProduct, setSelectedProduct] = useState(0);
   
   
@@ -19,6 +19,7 @@ function useQuantity() {
     }
 
     const decremenItem = (product_id: number) => {
+      if(quantity <= 1) return;
       setSelectedProduct(product_id);
   
       setQuantity((prev) => prev - 1);

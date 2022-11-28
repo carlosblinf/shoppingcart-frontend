@@ -1,12 +1,15 @@
+import { useShoppingCart } from '../../contex/ShoppingCartContex';
+import useQuantity from '../../hooks/quantity';
 import { CartItem } from '../../utils/types'
 import style from './style.module.scss'
 
 function Item(item:CartItem) {
-  const {product_id, product, quantity, price} = item;
+  const { product, quantity, price} = item;
 
-  const plusOneToCart = (product_id: number) => {
-    
-  }
+  const { removeCartItem} = useShoppingCart();
+  const { increaseItem,
+    decremenItem } = useQuantity(quantity);
+
   return (
     <div className={style.item}>
       <div className={style.action}>
@@ -17,15 +20,15 @@ function Item(item:CartItem) {
       </div>
       <div className={style.action}>
         <div className="update">
-          <button onClick={() => plusOneToCart(product.id)}>
+          <button onClick={() => increaseItem(product.id)}>
             +
           </button>
           <samp>{quantity}</samp>
-          <button onClick={() => plusOneToCart(product.id)}>
+          <button onClick={() => decremenItem(product.id)}>
             -
           </button>
         </div>
-        <button className={style.delete} onClick={() => plusOneToCart(product.id)}>
+        <button className={style.delete} onClick={() => removeCartItem(product.id)}>
           delete
         </button>
       </div>

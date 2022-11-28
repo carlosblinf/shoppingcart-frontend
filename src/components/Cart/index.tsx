@@ -18,10 +18,8 @@ function Cart({isOpen}:CartProps) {
           <h2>Shopping Cart</h2>
         </div>
         <div className={style.body}>
-          {cartItems?.map(item =>
+          {cartItems?.sort((a, b) => a.product.id - b.product.id).map(item =>
             <div key={item.id} className={style.cart}>
-              <Item {...item} />
-              <Item {...item} />
               <Item {...item} />
               </div>
             )}

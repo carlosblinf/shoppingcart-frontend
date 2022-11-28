@@ -19,7 +19,7 @@ function Item(item:CartItem) {
         </p>
       </div>
       <div className={style.action}>
-        <div className="update">
+        <div className={style.update}>
           <button onClick={() => increaseItem(product.id)}>
             +
           </button>

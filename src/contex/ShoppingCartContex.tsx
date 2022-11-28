@@ -4,6 +4,7 @@ import { CartService } from "../services/CartService";
 import { ProductService } from "../services/ProductService";
 import { CartItem, Product } from "../utils/types";
 import { OrderService } from "../services/OrderService";
+import { notificated } from "../utils/notification";
 
 type ShoppingCartProviderProps = {
     children: ReactNode;
@@ -60,7 +61,10 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps ) {
     async function addCartItem(product_id: number, quantity: number) {
         console.log("product_id"+ product_id + "quantity" + quantity);
         const result = await CartService.addCartItem({product_id, quantity});
-        setRender(result.data);
+        if(result.data) {
+            setRender(result.data);
+            notificated("Item Add", "The product has been added or modified", result.data.product.id);
+        }
     }
 
     async function removeCartItem(product_id: number) {
@@ -74,8 +78,10 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps ) {
 
     async function placeOrder() {
         const result = await OrderService.placeOrder();
-        if(result.data)
-        setRender(result.data);
+        if(result.data) {
+            setRender(result.data);
+            notificated("Order Created", "The order has been successfully created", result.data);
+        }
     }
 
     const cartQuantity = cartItems?.reduce(

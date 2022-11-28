@@ -18,6 +18,11 @@
     justify-content: space-between;
     justify-items: center;
     text-align: center;
+
+    .update {
+      display: flex;
+      justify-content: space-around;
+    }
   }
 
   .delete {

@@ -3,7 +3,7 @@ import Cart from "../components/Cart";
 import { CartService } from "../services/CartService";
 import { ProductService } from "../services/ProductService";
 import { CartItem, Product } from "../utils/types";
-import Item from '../components/Item';
+import { OrderService } from "../services/OrderService";
 
 type ShoppingCartProviderProps = {
     children: ReactNode;
@@ -65,16 +65,17 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps ) {
 
     async function removeCartItem(product_id: number) {
         const result = await CartService.deleteCartItem(product_id);
-        console.log(result.data);
         getCartItems();
     }
-
+    // TODO:
     function deleteCart(user_id: number) {
 
     }
 
-    function placeOrder() {
-
+    async function placeOrder() {
+        const result = await OrderService.placeOrder();
+        if(result.data)
+        setRender(result.data);
     }
 
     const cartQuantity = cartItems?.reduce(

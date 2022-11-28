@@ -1,6 +1,6 @@
-import { api } from "../utils/api";
+import { api } from "../utils/api"
 
-const endpoint = "products";
+const endpoint = "products"
 
 export const ProductService = {
     getAll: async () => {
@@ -14,13 +14,14 @@ export const ProductService = {
         imageUrl,
         category_id,
       }:any) => {
-        const form = new FormData();
-        form.append('name', name);
-        form.append('stock', stock);
-        form.append('price', price);
-        form.append('stock', stock);
-        form.append('description', description);
-        form.append('category_id', category_id);
+        const form = {
+            name,
+            description,
+            stock,
+            price,
+            imageUrl,
+            category_id,
+        }
         
         return await api.post(endpoint, form);
     },

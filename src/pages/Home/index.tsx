@@ -1,25 +1,21 @@
-import { useContext } from "react"
-import { useShoppingCart } from '../../contex/ShoppingCartContex';
+import Products from '../../components/Products'
+import { useShoppingCart } from '../../contex/ShoppingCartContex'
+import style from './style.module.scss'
+
 
 function Home() {
-
   const {products, addCartItem} = useShoppingCart();
 
   return (
-    <>
-    <main>
       <div className="container">
-        {products?.map( product =>
-          (
-          <div key={product.id} className="product">
-            <img src={product.imageUrl} alt={product.name} />
-            <h3>{product.name}</h3>
-            <div><button>agregar</button>{product.price}</div>
-          </div>
-        ))}
+        <div className={style.productsContainer}>
+          {products && products?.map( product =>
+            <div key={product.id} className={style.product} >
+              <Products  {...product}/>
+            </div>
+          )}
+        </div>
       </div>
-    </main>
-    </>
   )
 }
 

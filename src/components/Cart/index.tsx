@@ -8,11 +8,11 @@ type CartProps = {
 
 function Cart({isOpen}:CartProps) {
 
-  const {cartItems, totalCost, placeOrder} = useShoppingCart();
+  const {cartItems, totalCost, placeOrder, closeCart} = useShoppingCart();
 
   return (
-    <aside className={`show ${style.cartContainer}`}>
-      <span className={style.close}>&times;</span>
+    <aside className={`${style.cartContainer} + " " + ${isOpen ? "show": ""}`} >
+      <span className={style.close} onClick={() => closeCart()} >&times;</span>
       <div className={style.cart}>
         <div className={style.title}>
           <h2>Shopping Cart</h2>

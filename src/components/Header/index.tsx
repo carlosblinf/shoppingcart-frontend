@@ -4,7 +4,7 @@ import style from './style.module.scss'
 import { useShoppingCart } from '../../contex/ShoppingCartContex';
 
 function Header() {
-  const {cartQuantity} = useShoppingCart();
+  const {cartQuantity, openCart} = useShoppingCart();
   return (
     <header className={style.header}>
       <div className={`container ${style.containerNav}`}>
@@ -15,7 +15,7 @@ function Header() {
             <li><Link to="/store">Store</Link></li>
           </ul>
         </nav>
-        <button className={style.cart}>
+        <button className={style.cart} onClick={() => openCart()} >
           <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 576 512"

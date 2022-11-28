@@ -3,6 +3,7 @@
   top: 0;
   right: 0;
   width: 25%;
+  right: -25%;
   height: 100%;
   background: #f0f0f0;
   color: #000000;
@@ -12,6 +13,7 @@
   overflow-y: scroll;
   text-align: center;
   padding-bottom: 2rem;
+  transition: .7s;
 
   .cart {
     width: 100%;

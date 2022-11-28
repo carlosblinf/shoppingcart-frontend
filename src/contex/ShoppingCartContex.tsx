@@ -1,7 +1,9 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import Cart from "../components/Cart";
 import { CartService } from "../services/CartService";
 import { ProductService } from "../services/ProductService";
 import { CartItem, Product } from "../utils/types";
+import Item from '../components/Item';
 
 type ShoppingCartProviderProps = {
     children: ReactNode;
@@ -11,7 +13,8 @@ type ShoppingCartContext = {
     products: Product[];
     cartItems: CartItem[];
     cartQuantity: number;
-    openCart: () => void;
+    totalCost: number
+    openCart:  () => void;
     closeCart: () => void;
     getProducts: () => void;
     createProduct: (name: string, description: string, stock: number, price: number, mageUrl: string, ategory_id: number) => void
@@ -19,6 +22,7 @@ type ShoppingCartContext = {
     addCartItem: (product_id: number, quantity: number, user_id: number) => void;
     removeCartItem: (product_id: number) => void;
     deleteCart: (user_id: number) => void;
+    placeOrder: () => void;
 }
 
 const ShoppingCartContext = createContext({} as ShoppingCartContext);
@@ -30,6 +34,7 @@ export function useShoppingCart() {
 export function ShoppingCartProvider({ children }: ShoppingCartProviderProps ) {
     const [isOpen, setIsOpen] = useState(false);
     const [cartItems, setCartItems] = useState([]);
+    const [totalCost, setTotalCost] = useState(0);
     const [products, setProducts] = useState([]);
     const [render, setRender] = useState(null);
 
@@ -47,7 +52,9 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps ) {
 
     async function getCartItems(user_id: number) {
         const result = await CartService.getAll(user_id);
-        setCartItems(result.data);
+        console.log(result.data)
+        setCartItems(result.data.cartItems);
+        setTotalCost(result.data.totalCost);
     }
 
     async function addCartItem(product_id: number, quantity: number, user_id: number) {
@@ -64,7 +71,11 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps ) {
 
     }
 
-    const cartQuantity = cartItems.cartItems?.reduce(
+    function placeOrder() {
+
+    }
+
+    const cartQuantity = cartItems?.reduce(
         (quantity: number, item:CartItem) => item.quantity + quantity,
         0
     )
@@ -79,6 +90,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps ) {
         value={{
             products,
             cartItems,
+            totalCost,
             cartQuantity,
             openCart,
             closeCart,
@@ -87,9 +99,11 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps ) {
             getCartItems,
             addCartItem,
             removeCartItem,
-            deleteCart
+            deleteCart,
+            placeOrder
         }}>
             {children}
+            <Cart isOpen={isOpen} />
         </ShoppingCartContext.Provider>
     );
 }

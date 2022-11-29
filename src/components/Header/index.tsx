@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import style from './style.module.scss'
+import style from './header.module.scss'
 import { useShoppingCart } from '../../contex/ShoppingCartContex';
 
 function Header() {

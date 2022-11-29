@@ -1,6 +1,6 @@
 import { useShoppingCart } from '../../contex/ShoppingCartContex';
 import Item from '../Item';
-import style from './style.module.scss'
+import style from './cart.module.scss'
 
 type CartProps = {
   isOpen: boolean

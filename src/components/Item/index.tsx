@@ -1,7 +1,7 @@
 import { useShoppingCart } from '../../contex/ShoppingCartContex';
 import useQuantity from '../../hooks/quantity';
 import { CartItem } from '../../utils/types'
-import style from './style.module.scss'
+import style from './item.module.scss'
 
 function Item(item:CartItem) {
   const { product, quantity, price} = item;

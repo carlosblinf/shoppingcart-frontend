@@ -2,7 +2,7 @@ import { createContext, ReactNode, useContext, useEffect, useState } from "react
 import Cart from "../components/Cart";
 import { CartService } from "../services/CartService";
 import { ProductService } from "../services/ProductService";
-import { CartItem, Product } from "../utils/types";
+import { CartItem, Product, Order, Category } from "../utils/types";
 import { OrderService } from "../services/OrderService";
 import { notificated } from "../utils/notification";
 
@@ -12,13 +12,18 @@ type ShoppingCartProviderProps = {
 
 type ShoppingCartContext = {
     products: Product[];
+    categories: Category[]
     cartItems: CartItem[];
+    orders: Order[];
     cartQuantity: number;
     totalCost: number
     openCart:  () => void;
     closeCart: () => void;
     getProducts: () => void;
-    createProduct: (name: string, description: string, stock: number, price: number, mageUrl: string, ategory_id: number) => void
+    getCategories: () => void;
+    getOrders: () => void;
+    createCategory: (name: string) => void;
+    createProduct: (name: string, description: string, stock: number, price: number, imageUrl: string, category_id: number) => void
     getCartItems: () => void;
     addCartItem: (product_id: number, quantity: number) => void;
     removeCartItem: (product_id: number) => void;
@@ -35,6 +40,8 @@ export function useShoppingCart() {
 export function ShoppingCartProvider({ children }: ShoppingCartProviderProps ) {
     const [isOpen, setIsOpen] = useState(false);
     const [cartItems, setCartItems] = useState([]);
+    const [orders, setOrders] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [totalCost, setTotalCost] = useState(0);
     const [products, setProducts] = useState([]);
     const [render, setRender] = useState(null);
@@ -47,13 +54,22 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps ) {
         setProducts(result.data);
     }
 
-    function createProduct(name: string, description: string, stock: number, price: number, mageUrl: string, ategory_id: number) {
+    async function getCategories(){
+        const result = await ProductService.getCategories();
+        setCategories(result.data);
+    }
 
+    async function createProduct(name: string, description: string, stock: number, price: number, imageUrl: string, category_id: number) {
+        const result = await ProductService.createProduct({name, description, stock, price, imageUrl, category_id});
+        if(result.data) {
+            console.log(result.data)
+            setRender(result.data);
+            notificated("Category Add", "Category has been created", result.data);
+        }
     }
 
     async function getCartItems() {
         const result = await CartService.getAll();
-        console.log(result.data)
         setCartItems(result.data.cartItems);
         setTotalCost(result.data.totalCost);
     }
@@ -75,12 +91,28 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps ) {
     function deleteCart(user_id: number) {
 
     }
+    
 
     async function placeOrder() {
         const result = await OrderService.placeOrder();
         if(result.data) {
             setRender(result.data);
             notificated("Order Created", "The order has been successfully created", result.data);
+        }
+    }
+
+    async function getOrders() {
+        const result = await OrderService.getAll();
+        if(result.data) {
+            setOrders(result.data);
+        }
+    }
+
+    async function createCategory(name: string) {
+        const result = await ProductService.createCategory(name);
+        if(result.data) {
+            getCategories();
+            notificated("Category Add", "Category has been created", result.data);
         }
     }
 
@@ -92,15 +124,22 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps ) {
     useEffect(() => {
         getProducts();
         getCartItems();
+        getOrders();
+        getCategories();
     }, [render]);
     
     return (
         <ShoppingCartContext.Provider
         value={{
             products,
+            categories,
             cartItems,
+            orders,
             totalCost,
             cartQuantity,
+            createCategory,
+            getCategories,
+            getOrders,
             openCart,
             closeCart,
             getProducts,

@@ -9,7 +9,6 @@
 
 .container {
     width: 85%;
-    /* max-width: 1200px; */
     margin: 0 auto;
 }
 a {
@@ -19,4 +18,9 @@ a {
 
 .show {
     right: 0%;
+}
+
+.form-group {
+    display: flex;
+    justify-content: space-between;
 }

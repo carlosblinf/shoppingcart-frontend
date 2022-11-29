@@ -1,6 +1,6 @@
 import Products from '../../components/Products'
 import { useShoppingCart } from '../../contex/ShoppingCartContex'
-import style from './style.module.scss'
+import style from './home.module.scss'
 
 
 function Home() {
